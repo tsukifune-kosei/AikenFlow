@@ -24,7 +24,9 @@ jobs:
       - name: Format
         run: cargo fmt --all -- --check
       - name: Test
-        run: cargo test --workspace --no-fail-fast
+        env:
+          RUST_BACKTRACE: 1
+        run: cargo test --workspace --no-fail-fast -- --test-threads=1
       - name: Clippy
         run: cargo clippy --workspace --all-targets -- -D warnings
       - name: Install cargo-audit
