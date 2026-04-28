@@ -12,7 +12,7 @@ use std::os::unix::fs::PermissionsExt;
 #[test]
 fn ast_outline_missing_is_reported_cleanly() {
     let temp = TempDir::new().expect("temp dir");
-    let runner = AstOutlineRunner::new("definitely-not-installed-ast-outline-for-aikenflow-tests");
+    let runner = AstOutlineRunner::new(temp.path().join("missing-ast-outline"));
 
     let error = generate_agent_context_markdown(temp.path(), &runner, "codex")
         .expect_err("missing ast-outline should fail");

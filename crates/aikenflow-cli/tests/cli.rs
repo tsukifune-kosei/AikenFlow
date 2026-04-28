@@ -24,12 +24,13 @@ where
     I: IntoIterator<Item = S>,
     S: AsRef<OsStr>,
 {
+    let missing_ast_outline = std::env::temp_dir().join(format!(
+        "aikenflow-missing-ast-outline-{}",
+        std::process::id()
+    ));
     Command::new(aikenflow_bin())
         .args(args)
-        .env(
-            "AIKENFLOW_AST_OUTLINE",
-            "definitely-not-installed-ast-outline-for-cli-tests",
-        )
+        .env("AIKENFLOW_AST_OUTLINE", missing_ast_outline)
         .output()
         .expect("run aikenflow")
 }

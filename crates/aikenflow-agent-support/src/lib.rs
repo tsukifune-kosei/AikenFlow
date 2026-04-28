@@ -76,6 +76,10 @@ impl AstOutlineRunner {
     }
 
     pub fn run(&self, path: &Path) -> Result<AstOutlineResult, AgentSupportError> {
+        if is_explicit_missing_executable(&self.executable) {
+            return Err(AgentSupportError::MissingAstOutline);
+        }
+
         let output = Command::new(&self.executable)
             .arg(path)
             .output()
@@ -88,9 +92,15 @@ impl AstOutlineRunner {
             })?;
 
         if !output.status.success() {
+            let stderr = String::from_utf8_lossy(&output.stderr).trim().to_owned();
+            if output.status.code() == Some(127)
+                && (stderr.is_empty() || stderr.to_ascii_lowercase().contains("not found"))
+            {
+                return Err(AgentSupportError::MissingAstOutline);
+            }
             return Err(AgentSupportError::AstOutlineFailed {
                 status: output.status.to_string(),
-                stderr: String::from_utf8_lossy(&output.stderr).trim().to_owned(),
+                stderr,
             });
         }
 
@@ -98,6 +108,11 @@ impl AstOutlineRunner {
         let files = parse_ast_outline_text(&raw);
         Ok(AstOutlineResult { files, raw })
     }
+}
+
+fn is_explicit_missing_executable(executable: &OsStr) -> bool {
+    let path = Path::new(executable);
+    (path.is_absolute() || path.components().count() > 1) && !path.exists()
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
