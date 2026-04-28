@@ -35,7 +35,7 @@ jobs:
         run: cargo audit
 
   vscode-extension:
-    name: VS Code Extension
+    name: VS Code Extension Build
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -55,37 +55,33 @@ jobs:
         run: npm audit --audit-level=moderate
       - name: Build and unit test
         run: npm run check
-      - name: Install Xvfb
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            dbus-x11 \
-            libatk-bridge2.0-0 \
-            libdrm2 \
-            libgbm1 \
-            libgtk-3-0 \
-            libnss3 \
-            libsecret-1-0 \
-            libx11-xcb1 \
-            libxcomposite1 \
-            libxdamage1 \
-            libxkbfile1 \
-            libxrandr2 \
-            libxshmfence1 \
-            libxss1 \
-            libxtst6 \
-            xauth \
-            xvfb
-          sudo apt-get install -y libasound2t64 || sudo apt-get install -y libasound2
-      - name: Build backend CLI for Extension Host tests
-        run: cargo build -p aikenflow-cli
-        working-directory: .
-      - name: Run Extension Host smoke tests
-        run: xvfb-run -a npm run test:integration
       - name: Package VSIX
         run: npm run vsix
       - name: Verify VSIX archive
         run: unzip -t vscode-aikenflow-0.1.0.vsix
+
+  vscode-extension-host:
+    name: VS Code Extension Host
+    runs-on: macos-15
+    defaults:
+      run:
+        working-directory: extensions/vscode-aikenflow
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: extensions/vscode-aikenflow/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Build backend CLI for Extension Host tests
+        run: cargo build -p aikenflow-cli
+        working-directory: .
+      - name: Run Extension Host smoke tests
+        run: npm run test:integration
 
   examples:
     name: Example Smoke
