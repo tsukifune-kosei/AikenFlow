@@ -17,6 +17,7 @@ try {
   await copyRequiredFile("LICENSE.md");
   await copyDirectoryIfExists("out");
   await copyDirectoryIfExists(path.join("media", "webview"));
+  await copyDirectoryIfExists("images");
   await copyDirectoryIfExists("bin");
 
   const manifest = renderManifest(pkg, packageFiles);
@@ -104,6 +105,10 @@ function renderManifest(packageJson, files) {
   if (files.includes("LICENSE.md")) {
     assets.push(`<Asset Type="Microsoft.VisualStudio.Services.Content.License" Path="extension/LICENSE.md" Addressable="true" />`);
   }
+  if (typeof packageJson.icon === "string" && files.includes(toZipPath(packageJson.icon))) {
+    assets.push(`<Asset Type="Microsoft.VisualStudio.Services.Icons.Default" Path="extension/${toZipPath(packageJson.icon)}" Addressable="true" />`);
+  }
+  const tags = Array.isArray(packageJson.keywords) ? packageJson.keywords.join(",") : "";
 
   return `<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
@@ -111,7 +116,7 @@ function renderManifest(packageJson, files) {
     <Identity Language="en-US" Id="${xml(packageJson.name)}" Version="${xml(packageJson.version)}" Publisher="${xml(packageJson.publisher)}" />
     <DisplayName>${xml(packageJson.displayName ?? packageJson.name)}</DisplayName>
     <Description xml:space="preserve">${xml(packageJson.description ?? "")}</Description>
-    <Tags></Tags>
+    <Tags>${xml(tags)}</Tags>
     <Categories>${xml(categories)}</Categories>
     <GalleryFlags>Public</GalleryFlags>
     <Properties>
@@ -174,6 +179,10 @@ function contentTypeFor(extension) {
       return "application/json";
     case ".md":
       return "text/markdown";
+    case ".svg":
+      return "image/svg+xml";
+    case ".png":
+      return "image/png";
     case ".vsixmanifest":
     case ".xml":
       return "text/xml";

@@ -1,0 +1,154 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag, for example v0.1.0"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  cli:
+    name: CLI ${{ matrix.asset }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            asset: x86_64-unknown-linux-gnu
+            archive: tar.gz
+          - os: macos-15-intel
+            asset: x86_64-apple-darwin
+            archive: tar.gz
+          - os: macos-15
+            asset: aarch64-apple-darwin
+            archive: tar.gz
+          - os: windows-latest
+            asset: x86_64-pc-windows-msvc
+            archive: zip
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Build CLI
+        run: cargo build --release -p aikenflow-cli
+      - name: Package CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            version="${{ github.event.inputs.tag }}"
+            version="${version#v}"
+          fi
+
+          package="aikenflow-${version}-${{ matrix.asset }}"
+          mkdir -p "dist/$package"
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            cp target/release/aikenflow.exe "dist/$package/aikenflow.exe"
+          else
+            cp target/release/aikenflow "dist/$package/aikenflow"
+          fi
+          cp README.md LICENSE CHANGELOG.md "dist/$package/"
+
+          if [ "${{ matrix.archive }}" = "zip" ]; then
+            (cd dist && 7z a "$package.zip" "$package")
+            artifact="dist/$package.zip"
+          else
+            tar -C dist -czf "dist/$package.tar.gz" "$package"
+            artifact="dist/$package.tar.gz"
+          fi
+
+          if command -v shasum >/dev/null 2>&1; then
+            shasum -a 256 "$artifact" > "$artifact.sha256"
+          else
+            sha256sum "$artifact" > "$artifact.sha256"
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cli-${{ matrix.asset }}
+          path: dist/*
+
+  vscode:
+    name: VS Code VSIX
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: extensions/vscode-aikenflow
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: extensions/vscode-aikenflow/package-lock.json
+      - run: npm ci
+      - run: npm run vsix
+      - run: unzip -t vscode-aikenflow-0.1.0.vsix
+      - name: Stage VSIX
+        run: |
+          mkdir -p ../../dist
+          cp vscode-aikenflow-0.1.0.vsix ../../dist/
+          shasum -a 256 ../../dist/vscode-aikenflow-0.1.0.vsix > ../../dist/vscode-aikenflow-0.1.0.vsix.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vscode-vsix
+          path: dist/*
+
+  github-release:
+    name: GitHub Release
+    runs-on: ubuntu-latest
+    needs:
+      - cli
+      - vscode
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: List release assets
+        run: find dist -type f -maxdepth 2 -print | sort
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
+          files: dist/*
+          fail_on_unmatched_files: true
+
+  marketplace:
+    name: Optional VS Code Marketplace Publish
+    runs-on: ubuntu-latest
+    needs:
+      - vscode
+      - github-release
+    defaults:
+      run:
+        working-directory: extensions/vscode-aikenflow
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: extensions/vscode-aikenflow/package-lock.json
+      - run: npm ci
+      - run: npm run vsix
+      - name: Publish if VSCE_PAT is configured
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          if [ -z "${VSCE_PAT:-}" ]; then
+            echo "VSCE_PAT is not configured; skipping Marketplace publish."
+            exit 0
+          fi
+          npx --yes @vscode/vsce@latest publish --packagePath vscode-aikenflow-0.1.0.vsix -p "$VSCE_PAT"

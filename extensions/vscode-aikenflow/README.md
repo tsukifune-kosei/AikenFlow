@@ -5,10 +5,11 @@ workspace. The extension is a thin client over the Rust `aikenflow` CLI.
 
 ## Required CLI
 
-Install or build the CLI, then make it available on `PATH`:
+Install the CLI from a GitHub Release, or build it locally from the repository
+root and make it available on `PATH`:
 
 ```bash
-cargo build -p aikenflow-cli
+cargo install --path crates/aikenflow-cli
 ```
 
 For local development, set:
@@ -34,6 +35,7 @@ bundles and never derives protocol semantics by itself.
 ## Verification
 
 ```bash
+npm audit --audit-level=moderate
 npm run check
 npm run check:full
 ```
@@ -41,3 +43,9 @@ npm run check:full
 `check:full` builds the webview, runs unit tests, launches VS Code through
 `@vscode/test-electron` against a temporary fixture workspace, and packages a
 VSIX.
+
+## Release
+
+The extension is packaged as `vscode-aikenflow-0.1.0.vsix`. Marketplace
+publishing is handled by the repository release workflow when `VSCE_PAT` is
+configured for the `tsukifune-kosei` publisher.

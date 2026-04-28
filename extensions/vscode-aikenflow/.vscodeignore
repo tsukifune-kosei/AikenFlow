@@ -7,6 +7,9 @@ out/test/
 src/
 webview-ui/
 fixtures/
+scripts/
 **/*.map
 tsconfig*.json
 vite.config.ts
+!media/
+!media/webview/**

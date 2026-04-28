@@ -4,6 +4,9 @@ use aikenflow_ir::{
 };
 use std::collections::BTreeSet;
 
+pub const AIKEN_COMPILER_VERSION: &str = "v1.1.19";
+pub const AIKEN_STDLIB_VERSION: &str = "v3.0.0";
+
 pub fn generate(protocol: &Protocol) -> GeneratedFiles {
     let mut files = GeneratedFiles::default();
     files.push("aiken.toml", generate_manifest(protocol));
@@ -35,7 +38,7 @@ fn generate_manifest(protocol: &Protocol) -> String {
     format!(
         r#"name = "{package_name}"
 version = "0.1.0"
-compiler = "v1.1.21"
+compiler = "{compiler_version}"
 plutus = "v3"
 license = "Apache-2.0"
 description = "Generated Aiken validators for the {name} protocol"
@@ -47,13 +50,15 @@ platform = "github"
 
 [[dependencies]]
 name = "aiken-lang/stdlib"
-version = "v3.0.0"
+version = "{stdlib_version}"
 source = "github"
 
 [config]
 "#,
         name = protocol.name,
-        snake = to_snake_case(&protocol.name)
+        snake = to_snake_case(&protocol.name),
+        compiler_version = AIKEN_COMPILER_VERSION,
+        stdlib_version = AIKEN_STDLIB_VERSION,
     )
 }
 

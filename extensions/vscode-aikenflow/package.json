@@ -3,9 +3,15 @@
   "displayName": "AikenFlow",
   "description": "Protocol assurance cockpit for Aiken/Cardano builders.",
   "version": "0.1.0",
-  "publisher": "aikenflow",
-  "private": true,
+  "publisher": "tsukifune-kosei",
   "license": "Apache-2.0",
+  "icon": "images/icon.png",
+  "preview": true,
+  "qna": false,
+  "homepage": "https://github.com/tsukifune-kosei/AikenFlow#readme",
+  "bugs": {
+    "url": "https://github.com/tsukifune-kosei/AikenFlow/issues"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/tsukifune-kosei/AikenFlow.git",
@@ -18,8 +24,25 @@
     "vscode": "^1.92.0"
   },
   "categories": [
+    "Programming Languages",
+    "Visualization",
+    "Testing",
     "Other"
   ],
+  "keywords": [
+    "aiken",
+    "cardano",
+    "plutus",
+    "eutxo",
+    "smart contracts",
+    "protocol",
+    "assurance",
+    "audit"
+  ],
+  "galleryBanner": {
+    "color": "#050814",
+    "theme": "dark"
+  },
   "activationEvents": [
     "workspaceContains:**/protocol.yaml",
     "workspaceContains:**/protocol.yml",

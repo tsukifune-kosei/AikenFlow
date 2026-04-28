@@ -90,33 +90,21 @@ agent support independently.
 - Included generated Aiken, Lucid, test, and audit artefacts with language
   metadata for file-tree and code-viewer UI surfaces.
 
-### Frontend
+### VS Code Extension
 
-- Added `aikenflow-ui`, a Vite/React/TypeScript visual protocol cockpit that
-  loads exported JSON bundles without a backend server.
-- Added Monaco-backed protocol spec viewing, React Flow state/transaction
-  topology, assurance metrics, invariant review, inspector cards, and generated
-  artefact tabs.
-- Aligned frontend implementation boundaries with the architecture document:
-  `core` owns bundle loading/export helpers, `layout` owns cockpit composition,
-  and `features` own product surfaces.
-- Added selected state/transition YAML highlighting and graph legend support for
-  the spec-graph-assurance review workflow.
-- Added selection-aware generated artefact navigation with linked-tab indicators,
-  code line highlighting, and copy feedback.
-- Split assurance into coverage, invariant, diagnostic, and radar components,
-  and added an audit markdown preview for generated audit reports.
-- Added artefact deep-link support for demo URLs such as
-  `?tab=audit&file=assurance/AUDIT.md`.
-- Split the inspector into state, transition, topology preview, and shared info
-  components so selected protocol topology is visible without reading generated
-  code first.
-- Added Developer Mode bundle loading so local `aikenflow export` JSON files can
-  be opened directly in the browser cockpit.
-- Added Playwright E2E coverage for default loading, example switching, audit
-  deep links, local bundle import, bundle export, and mobile readability.
-- Added bundled demo data for simple vault, auction-lite, and programmable-token
-  examples.
+- Added the `extensions/vscode-aikenflow` VS Code extension as the v0.1 product
+  shell, with the Rust CLI remaining the semantic authority.
+- Added command palette actions for analysing protocols, opening the protocol
+  cockpit, generating artefacts, exporting audit reports, selecting the backend
+  binary, and creating Codex agent context.
+- Added real CLI subprocess orchestration, protocol file discovery, safe
+  workspace-relative output path validation, status bar summaries, and VS Code
+  diagnostics mapping.
+- Added a React webview cockpit that renders exported bundle data for graph,
+  assurance, findings, generated artefacts, and audit preview surfaces.
+- Added webview CSP handling and message validation so the webview can request
+  refreshes and file reveals without direct filesystem access.
+- Added Extension Host smoke tests and VSIX packaging.
 
 ### Agent Support
 
@@ -137,3 +125,5 @@ agent support independently.
   checklist documentation.
 - Added frontend architecture and UI/UX design documentation for the future
   AikenFlow visual protocol cockpit.
+- Added GitHub Actions CI, release packaging, issue templates, security policy,
+  contribution guide, root Apache-2.0 license, and release smoke scripts.

@@ -27,6 +27,9 @@ The VSIX must contain compiled extension code, the built webview assets,
 `node_modules`, source fixtures, test output, or workspace-local generated
 artefacts.
 
+CI must run the same gates on pushes, pull requests, and release tags through
+`.github/workflows/ci.yml`.
+
 ## Example Smoke Tests
 
 Run the included examples through the CLI:
@@ -47,6 +50,18 @@ cd /tmp/aikenflow-simple-vault-generated/offchain
 npm install
 npm run check
 ```
+
+For generated Aiken contracts, install the pinned Aiken release used by CI and
+run the full example smoke:
+
+```bash
+export PATH="$HOME/.aiken/bin:$PATH"
+bash scripts/verify-examples.sh
+```
+
+The smoke script runs `check --json`, `export`, `gen all`, `audit`, generated
+off-chain `npm run check`, and generated contract `aiken check` for every
+included example.
 
 `outline` and `agent-context` require `ast-outline` to be installed or configured
 with `AIKENFLOW_AST_OUTLINE`.
@@ -88,6 +103,20 @@ Once `extensions/vscode-aikenflow` exists, every release must also verify:
   paths show actionable errors.
 - Extension tests run through the documented VS Code test harness.
 - `cd extensions/vscode-aikenflow && npm run check:full` succeeds.
+
+## Release Packaging
+
+Tag releases as `vX.Y.Z`. `.github/workflows/release.yml` must produce:
+
+- native `aikenflow` CLI archives for Linux, macOS Intel, macOS Apple Silicon,
+  and Windows;
+- SHA-256 checksum files for every archive;
+- `vscode-aikenflow-0.1.0.vsix` and checksum;
+- a GitHub Release containing all artefacts.
+
+Marketplace publishing is optional and only runs when `VSCE_PAT` is configured
+as a repository secret. The extension publisher in `package.json` must match the
+Marketplace publisher that owns the token.
 
 ## Boundary Check
 

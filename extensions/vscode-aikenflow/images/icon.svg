@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="AikenFlow">
+  <defs>
+    <linearGradient id="mark" x1="18" x2="110" y1="112" y2="16" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="0.48" stop-color="#4da3ff"/>
+      <stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="3.5" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.301 0 0 0 0 0.639 0 0 0 0 1 0 0 0 0.75 0"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="128" height="128" rx="22" fill="#050814"/>
+  <path d="M24 98 61 26c1.2-2.4 4.6-2.5 5.9-.2l38.8 72.2H91.3L64.2 46.7 37.9 98H24Z" fill="url(#mark)" filter="url(#glow)"/>
+  <path d="M47.5 78.5h34.8l-8-14.8H55.1l-7.6 14.8Z" fill="#050814" opacity="0.92"/>
+  <circle cx="64" cy="64" r="5.5" fill="#22d3ee"/>
+  <circle cx="36" cy="98" r="4.2" fill="#4da3ff"/>
+  <circle cx="92" cy="98" r="4.2" fill="#8b5cf6"/>
+  <path d="M64 64 36 98m28-34 28 34" stroke="#8fd8ff" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+</svg>

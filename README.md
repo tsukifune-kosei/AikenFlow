@@ -1,5 +1,8 @@
 # AikenFlow
 
+[![CI](https://github.com/tsukifune-kosei/AikenFlow/actions/workflows/ci.yml/badge.svg)](https://github.com/tsukifune-kosei/AikenFlow/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+
 AikenFlow is an Aiken-compatible protocol compiler and assurance toolkit for multi-step Cardano eUTxO applications.
 
 AikenFlow v0.1 is not a formal verification tool. It generates assurance
@@ -16,7 +19,8 @@ protocol.yaml
   -> State graphs, topology JSON, invariant matrices, adversarial test stubs, audit reports
 ```
 
-This repository implements the Phase 1 MVP from the engineering design document.
+This repository contains the v0.1 technical preview: a Rust CLI backend plus a
+VS Code extension protocol cockpit.
 
 ## Status
 
@@ -47,6 +51,12 @@ Not implemented yet:
 - End-to-end Yaci Dev Kit runner.
 
 ## Quickstart
+
+Install the CLI from a GitHub Release once tagged, or build it locally:
+
+```bash
+cargo install --path crates/aikenflow-cli
+```
 
 ```bash
 cargo run -p aikenflow-cli -- init simple-vault
@@ -80,6 +90,15 @@ npm run check:full
 ```
 
 ## VS Code Extension
+
+Install the VSIX from a GitHub Release, or build it locally:
+
+```bash
+cd extensions/vscode-aikenflow
+npm ci
+npm run vsix
+code --install-extension vscode-aikenflow-0.1.0.vsix
+```
 
 1. Install or build the `aikenflow` CLI.
 2. Set `aikenflow.backendPath` if the binary is not on `PATH`.
@@ -239,4 +258,17 @@ cargo clippy --workspace --all-targets -- -D warnings
 cargo run -p aikenflow-cli -- check examples/simple-vault/protocol.yaml
 ```
 
-The generated Aiken project follows the current Aiken validator layout: application validators live in `validators/`, with an `aiken.toml` manifest and stdlib dependency.
+Release candidates also run:
+
+```bash
+cargo audit
+cd extensions/vscode-aikenflow && npm audit --audit-level=moderate && npm run check:full
+bash scripts/verify-examples.sh
+```
+
+`scripts/verify-examples.sh` requires the Aiken CLI. CI pins Aiken `v1.1.19`
+and checks generated Aiken contracts with `aiken check`.
+
+The generated Aiken project follows the current Aiken validator layout:
+application validators live in `validators/`, with an `aiken.toml` manifest and
+stdlib dependency.
