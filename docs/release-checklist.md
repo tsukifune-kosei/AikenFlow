@@ -27,8 +27,12 @@ The VSIX must contain compiled extension code, the built webview assets,
 `node_modules`, source fixtures, test output, or workspace-local generated
 artefacts.
 
-CI must run the same gates on pushes, pull requests, and release tags through
-`.github/workflows/ci.yml`.
+CI must run the deterministic non-GUI gates on pushes and pull requests through
+`.github/workflows/ci.yml`: Rust format, tests, clippy, audit, npm audit,
+webview build, extension unit tests, integration-test compilation, backend
+fixture smoke, VSIX packaging, VSIX archive verification, and example smoke
+tests. The full VS Code Extension Host smoke remains a local/manual release
+gate through `npm run check:full` because it launches a desktop Electron host.
 
 ## Example Smoke Tests
 

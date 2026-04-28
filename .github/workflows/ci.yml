@@ -55,33 +55,18 @@ jobs:
         run: npm audit --audit-level=moderate
       - name: Build and unit test
         run: npm run check
+      - name: Build backend CLI for extension smoke
+        run: cargo build -p aikenflow-cli
+        working-directory: .
+      - name: Smoke backend export for extension fixture
+        run: |
+          ../../target/debug/aikenflow check fixtures/workspaces/simple-vault/protocol.yaml --json
+          ../../target/debug/aikenflow export fixtures/workspaces/simple-vault/protocol.yaml --out /tmp/aikenflow-vscode-bundle.json
+          node -e "const fs = require('fs'); const bundle = JSON.parse(fs.readFileSync('/tmp/aikenflow-vscode-bundle.json', 'utf8')); if (bundle.schemaVersion !== '0.1.0' || !bundle.graph?.transactions?.length) process.exit(1);"
       - name: Package VSIX
         run: npm run vsix
       - name: Verify VSIX archive
         run: unzip -t vscode-aikenflow-0.1.0.vsix
-
-  vscode-extension-host:
-    name: VS Code Extension Host
-    runs-on: macos-15
-    defaults:
-      run:
-        working-directory: extensions/vscode-aikenflow
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: extensions/vscode-aikenflow/package-lock.json
-      - name: Install dependencies
-        run: npm ci
-      - name: Build backend CLI for Extension Host tests
-        run: cargo build -p aikenflow-cli
-        working-directory: .
-      - name: Run Extension Host smoke tests
-        run: npm run test:integration
 
   examples:
     name: Example Smoke
