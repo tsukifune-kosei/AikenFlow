@@ -48,8 +48,8 @@ export class AikenFlowCommands {
 
     this.currentProtocolUri = protocolUri;
     this.status.showAnalysing();
-    const panel = this.openPanel();
-    panel.post({ type: "analysis.started", protocolUri: protocolUri.toString() });
+    const panel = ProtocolCockpitPanel.existing();
+    panel?.post({ type: "analysis.started", protocolUri: protocolUri.toString() });
 
     await vscode.window.withProgress(
       {
@@ -77,7 +77,7 @@ export class AikenFlowCommands {
               ? "AikenFlow check failed. Open the Protocol Cockpit or Output panel for details."
               : cliFailureMessage(checkResult.stderr, "AikenFlow check failed.");
             this.status.showError(message);
-            panel.post({ type: "analysis.failed", message, stderr: checkResult.stderr });
+            panel?.post({ type: "analysis.failed", message, stderr: checkResult.stderr });
             void vscode.window.showErrorMessage(message);
             return;
           }
@@ -96,11 +96,11 @@ export class AikenFlowCommands {
           this.currentBundleSourceFsPath = protocolUri.fsPath;
           this.publishBundleDiagnostics(protocolUri, protocolSource, bundle);
           this.status.showBundle(bundle);
-          panel.updateBundle(bundle, protocolUri, exportResult.elapsedMs);
+          panel?.updateBundle(bundle, protocolUri, exportResult.elapsedMs);
         } catch (error) {
           const message = error instanceof Error ? error.message : "AikenFlow analysis failed.";
           this.status.showError(message);
-          panel.post({ type: "analysis.failed", message });
+          panel?.post({ type: "analysis.failed", message });
           void vscode.window.showErrorMessage(message);
         }
       },

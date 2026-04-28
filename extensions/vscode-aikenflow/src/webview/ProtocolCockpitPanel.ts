@@ -56,6 +56,10 @@ export class ProtocolCockpitPanel {
     return ProtocolCockpitPanel.current;
   }
 
+  static existing(): ProtocolCockpitPanel | undefined {
+    return ProtocolCockpitPanel.current;
+  }
+
   updateBundle(bundle: AikenFlowBundle, sourceUri: vscode.Uri, elapsedMs = 0): void {
     this.bundle = bundle;
     this.sourceUri = sourceUri;
