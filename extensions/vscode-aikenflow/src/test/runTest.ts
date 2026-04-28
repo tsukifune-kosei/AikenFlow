@@ -19,6 +19,8 @@ async function main(): Promise<void> {
       launchArgs: [
         testWorkspace,
         "--disable-extensions",
+        "--disable-gpu",
+        "--no-sandbox",
         `--user-data-dir=${userDataDir}`,
         `--extensions-dir=${extensionsDir}`,
       ],

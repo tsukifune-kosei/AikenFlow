@@ -54,7 +54,10 @@ jobs:
       - name: Build and unit test
         run: npm run check
       - name: Install Xvfb
-        run: sudo apt-get update && sudo apt-get install -y xvfb
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb libgtk-3-0 libgbm1 libnss3 libxss1 libsecret-1-0
+          sudo apt-get install -y libasound2t64 || sudo apt-get install -y libasound2
       - name: Build backend CLI for Extension Host tests
         run: cargo build -p aikenflow-cli
         working-directory: .
