@@ -14,12 +14,16 @@ async function main(): Promise<void> {
 
   try {
     await runTests({
+      version: "1.92.2",
+      timeout: 120_000,
       extensionDevelopmentPath,
       extensionTestsPath,
       launchArgs: [
         testWorkspace,
         "--disable-extensions",
         "--disable-gpu",
+        "--disable-dev-shm-usage",
+        "--disable-workspace-trust",
         "--no-sandbox",
         `--user-data-dir=${userDataDir}`,
         `--extensions-dir=${extensionsDir}`,
