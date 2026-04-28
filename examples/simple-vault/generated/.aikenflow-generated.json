@@ -1,0 +1,70 @@
+{
+  "files": [
+    {
+      "contentHash": "fnv1a64:7cef5f9003c1cdd9",
+      "path": "contracts/aiken.toml"
+    },
+    {
+      "contentHash": "fnv1a64:e0c97a1037b00497",
+      "path": "contracts/README.md"
+    },
+    {
+      "contentHash": "fnv1a64:4bf3ce05d7d06b98",
+      "path": "contracts/validators/simple_vault_locked.ak"
+    },
+    {
+      "contentHash": "fnv1a64:51061db23f1f811f",
+      "path": "offchain/package.json"
+    },
+    {
+      "contentHash": "fnv1a64:afc733c6e8261668",
+      "path": "offchain/tsconfig.json"
+    },
+    {
+      "contentHash": "fnv1a64:9dcb41b665604d5b",
+      "path": "offchain/README.md"
+    },
+    {
+      "contentHash": "fnv1a64:3dc1e831db15b378",
+      "path": "offchain/src/types.ts"
+    },
+    {
+      "contentHash": "fnv1a64:313ac6e181008993",
+      "path": "offchain/src/index.ts"
+    },
+    {
+      "contentHash": "fnv1a64:4aa97454f77fa76f",
+      "path": "assurance/README.md"
+    },
+    {
+      "contentHash": "fnv1a64:0479efd6c2063c4b",
+      "path": "assurance/state-graph.mmd"
+    },
+    {
+      "contentHash": "fnv1a64:f965fad0430628f7",
+      "path": "assurance/topology.json"
+    },
+    {
+      "contentHash": "fnv1a64:e92c3ce1926c8e9b",
+      "path": "assurance/coverage.json"
+    },
+    {
+      "contentHash": "fnv1a64:50ebf3b07d5791fc",
+      "path": "assurance/invariant-matrix.md"
+    },
+    {
+      "contentHash": "fnv1a64:19bba57c50ce408c",
+      "path": "assurance/adversarial-cases.md"
+    },
+    {
+      "contentHash": "fnv1a64:14983ac21d8f1e64",
+      "path": "assurance/tests/adversarial.spec.ts"
+    },
+    {
+      "contentHash": "fnv1a64:93d5d72cc9a0a779",
+      "path": "assurance/AUDIT.md"
+    }
+  ],
+  "tool": "aikenflow",
+  "version": 2
+}

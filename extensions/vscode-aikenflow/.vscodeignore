@@ -1,0 +1,12 @@
+node_modules/
+.vscode/
+.vscode-test/
+out-test/
+out-integration/
+out/test/
+src/
+webview-ui/
+fixtures/
+**/*.map
+tsconfig*.json
+vite.config.ts

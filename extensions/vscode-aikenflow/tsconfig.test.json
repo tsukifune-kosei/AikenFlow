@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "out-test",
+    "rootDir": "src",
+    "types": ["node"]
+  },
+  "include": [
+    "src/**/*.test.ts",
+    "src/shared/**/*.ts",
+    "src/cli/cliTypes.ts",
+    "src/artefacts/generatedManifest.ts",
+    "src/workspace/pathSafety.ts"
+  ],
+  "exclude": ["src/test/**"]
+}

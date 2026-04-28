@@ -1,0 +1,48 @@
+protocol: SimpleVault
+description: Simple custody workflow with owner authorization and deadline-based withdrawal.
+
+assets:
+  - name: ada
+    kind: lovelace
+
+states:
+  Locked:
+    datum:
+      owner: PubKeyHash
+      amount: Lovelace
+      deadline: POSIXTime
+
+transitions:
+  Deposit:
+    inputs: []
+    outputs:
+      - state: Locked
+        value:
+          ada: "$amount"
+    constraints:
+      - signed_by: "$owner"
+      - positive: "$amount"
+
+  Withdraw:
+    inputs:
+      - state: Locked
+    outputs: []
+    constraints:
+      - signed_by: "datum.owner"
+      - after: "datum.deadline"
+
+  EmergencyCancel:
+    inputs:
+      - state: Locked
+    outputs: []
+    constraints:
+      - signed_by: "datum.owner"
+      - before: "datum.deadline"
+
+invariants:
+  - name: no_negative_locked_value
+    expression: "locked.amount >= 0"
+  - name: withdrawal_requires_owner
+    expression: "transition.Withdraw requires signature(datum.owner)"
+  - name: withdrawal_requires_deadline_passed
+    expression: "transition.Withdraw requires after(datum.deadline)"

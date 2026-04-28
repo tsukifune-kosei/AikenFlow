@@ -1,0 +1,184 @@
+{
+  "name": "vscode-aikenflow",
+  "displayName": "AikenFlow",
+  "description": "Protocol assurance cockpit for Aiken/Cardano builders.",
+  "version": "0.1.0",
+  "publisher": "aikenflow",
+  "private": true,
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tsukifune-kosei/AikenFlow.git",
+    "directory": "extensions/vscode-aikenflow"
+  },
+  "extensionKind": [
+    "workspace"
+  ],
+  "engines": {
+    "vscode": "^1.92.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "workspaceContains:**/protocol.yaml",
+    "workspaceContains:**/protocol.yml",
+    "workspaceContains:**/aikenflow.yaml",
+    "workspaceContains:**/aikenflow.yml",
+    "onCommand:aikenflow.analyseProtocol",
+    "onCommand:aikenflow.openProtocolCockpit",
+    "onCommand:aikenflow.generateArtefacts",
+    "onCommand:aikenflow.exportAuditReport",
+    "onCommand:aikenflow.createAgentContext",
+    "onCommand:aikenflow.selectBackendBinary",
+    "onCommand:aikenflow.configureCompilerPath"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "aikenflow.analyseProtocol",
+        "title": "AikenFlow: Analyse Protocol",
+        "category": "AikenFlow"
+      },
+      {
+        "command": "aikenflow.openProtocolCockpit",
+        "title": "AikenFlow: Open Protocol Cockpit",
+        "category": "AikenFlow"
+      },
+      {
+        "command": "aikenflow.generateArtefacts",
+        "title": "AikenFlow: Generate Artefacts",
+        "category": "AikenFlow"
+      },
+      {
+        "command": "aikenflow.exportAuditReport",
+        "title": "AikenFlow: Export Audit Report",
+        "category": "AikenFlow"
+      },
+      {
+        "command": "aikenflow.createAgentContext",
+        "title": "AikenFlow: Create Agent Context",
+        "category": "AikenFlow"
+      },
+      {
+        "command": "aikenflow.selectBackendBinary",
+        "title": "AikenFlow: Select Backend Binary",
+        "category": "AikenFlow"
+      },
+      {
+        "command": "aikenflow.configureCompilerPath",
+        "title": "AikenFlow: Configure Compiler Path (Legacy)",
+        "category": "AikenFlow"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "aikenflow.analyseProtocol",
+          "when": "resourceFilename == protocol.yaml",
+          "group": "aikenflow@1"
+        },
+        {
+          "command": "aikenflow.openProtocolCockpit",
+          "when": "resourceFilename == protocol.yaml",
+          "group": "aikenflow@2"
+        },
+        {
+          "command": "aikenflow.createAgentContext",
+          "when": "explorerResourceIsFolder",
+          "group": "aikenflow@3"
+        }
+      ],
+      "editor/title/context": [
+        {
+          "command": "aikenflow.analyseProtocol",
+          "when": "resourceFilename == protocol.yaml",
+          "group": "aikenflow@1"
+        },
+        {
+          "command": "aikenflow.openProtocolCockpit",
+          "when": "resourceFilename == protocol.yaml",
+          "group": "aikenflow@2"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "AikenFlow",
+      "properties": {
+        "aikenflow.backendPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the aikenflow backend CLI binary. If empty, AikenFlow checks AIKENFLOW_BIN, a legacy compilerPath setting, a bundled binary, and PATH."
+        },
+        "aikenflow.compilerPath": {
+          "type": "string",
+          "default": "",
+          "description": "Deprecated legacy alias for aikenflow.backendPath."
+        },
+        "aikenflow.bundlePath": {
+          "type": "string",
+          "default": ".aikenflow/bundle.json",
+          "description": "Workspace-relative path where Analyse Protocol writes the exported bundle."
+        },
+        "aikenflow.protocolSpecPath": {
+          "type": "string",
+          "default": "",
+          "description": "Optional workspace-relative protocol spec path. If empty, AikenFlow searches for protocol.yaml, protocol.yml, aikenflow.yaml, or aikenflow.yml."
+        },
+        "aikenflow.generatedOutputDir": {
+          "type": "string",
+          "default": "generated",
+          "description": "Workspace-relative directory for generated contracts, off-chain builders, tests, and assurance artefacts."
+        },
+        "aikenflow.auditOutputPath": {
+          "type": "string",
+          "default": ".aikenflow/AUDIT.md",
+          "description": "Workspace-relative path for exported audit reports."
+        },
+        "aikenflow.agentContextPath": {
+          "type": "string",
+          "default": ".aikenflow/agent-context.md",
+          "description": "Workspace-relative path for generated Codex agent context."
+        },
+        "aikenflow.autoAnalyseOnSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Run AikenFlow analysis when protocol.yaml is saved."
+        },
+        "aikenflow.analysisTimeoutMs": {
+          "type": "number",
+          "default": 30000,
+          "minimum": 1000,
+          "description": "Timeout in milliseconds for AikenFlow CLI commands."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "clean": "node -e \"const fs=require('fs'); for (const p of ['out','out-test','out-integration','media/webview']) fs.rmSync(p,{recursive:true,force:true})\"",
+    "compile": "tsc -p .",
+    "compile:integration": "tsc -p tsconfig.integration.json",
+    "build:webview": "vite build --config webview-ui/vite.config.ts",
+    "build": "npm run clean && npm run compile && npm run build:webview",
+    "test:unit": "tsc -p tsconfig.test.json && node --test out-test/**/*.test.js",
+    "test:integration": "npm run build && npm run compile:integration && node out-integration/test/runTest.js",
+    "check": "npm run build && npm run test:unit && npm run compile:integration",
+    "check:full": "npm run check && npm run test:integration && npm run vsix",
+    "vsix": "npm run build && node scripts/package-vsix.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@types/vscode": "^1.92.0",
+    "@vitejs/plugin-react": "^5.0.4",
+    "@vscode/test-electron": "^2.5.2",
+    "@xyflow/react": "^12.9.0",
+    "lucide-react": "^0.552.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.12"
+  }
+}

@@ -1,0 +1,28 @@
+[package]
+name = "aikenflow-cli"
+version = "0.1.0"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+
+[[bin]]
+name = "aikenflow"
+path = "src/main.rs"
+
+[dependencies]
+aikenflow-aiken-gen.workspace = true
+aikenflow-agent-support.workspace = true
+aikenflow-assurance.workspace = true
+aikenflow-export.workspace = true
+aikenflow-ir.workspace = true
+aikenflow-lucid-gen.workspace = true
+aikenflow-parser.workspace = true
+anyhow.workspace = true
+clap.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

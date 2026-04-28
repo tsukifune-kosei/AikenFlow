@@ -1,0 +1,66 @@
+protocol: ProgrammableTokenMini
+description: Small programmable-token lifecycle profile inspired by freeze and revoke workflows.
+
+assets:
+  - name: regulated_token
+    kind: native
+    policy: regulated_policy
+
+states:
+  Active:
+    datum:
+      authority: PubKeyHash
+      holder: PubKeyHash
+      amount: Int
+  Frozen:
+    datum:
+      authority: PubKeyHash
+      holder: PubKeyHash
+      amount: Int
+  Revoked:
+    terminal: true
+    datum:
+      authority: PubKeyHash
+      amount: Int
+
+transitions:
+  Transfer:
+    inputs:
+      - state: Active
+    outputs:
+      - state: Active
+    constraints:
+      - signed_by: "datum.holder"
+      - positive: "datum.amount"
+
+  Freeze:
+    inputs:
+      - state: Active
+    outputs:
+      - state: Frozen
+    constraints:
+      - signed_by: "datum.authority"
+
+  Unfreeze:
+    inputs:
+      - state: Frozen
+    outputs:
+      - state: Active
+    constraints:
+      - signed_by: "datum.authority"
+
+  Revoke:
+    inputs:
+      - state: Frozen
+    outputs:
+      - state: Revoked
+    constraints:
+      - signed_by: "datum.authority"
+
+invariants:
+  - name: frozen_asset_cannot_transfer
+    expression: "transition.Transfer only consumes Active"
+  - name: authority_controls_freeze
+    expression: "transition.Freeze requires signature(datum.authority)"
+  - name: revoke_requires_frozen_state
+    expression: "transition.Revoke consumes Frozen"

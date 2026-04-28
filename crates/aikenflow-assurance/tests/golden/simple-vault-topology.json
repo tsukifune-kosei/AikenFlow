@@ -1,0 +1,54 @@
+[
+  {
+    "transition": "Deposit",
+    "consumes": [],
+    "references": [],
+    "produces": [
+      "Locked"
+    ],
+    "mints": [],
+    "burns": [],
+    "requires_signatures": [
+      "$owner"
+    ],
+    "requires_validity": []
+  },
+  {
+    "transition": "Withdraw",
+    "consumes": [
+      "Locked"
+    ],
+    "references": [],
+    "produces": [],
+    "mints": [],
+    "burns": [],
+    "requires_signatures": [
+      "datum.owner"
+    ],
+    "requires_validity": [
+      [
+        "after",
+        "datum.deadline"
+      ]
+    ]
+  },
+  {
+    "transition": "EmergencyCancel",
+    "consumes": [
+      "Locked"
+    ],
+    "references": [],
+    "produces": [],
+    "mints": [],
+    "burns": [],
+    "requires_signatures": [
+      "datum.owner"
+    ],
+    "requires_validity": [
+      [
+        "before",
+        "datum.deadline"
+      ]
+    ]
+  }
+]

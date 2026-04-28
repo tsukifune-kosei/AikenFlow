@@ -1,0 +1,15 @@
+/target
+**/target
+**/build
+**/plutus.json
+**/aiken.lock
+node_modules
+dist
+out
+out-test
+**/media/webview
+*.vsix
+.vscode-test
+test-results
+playwright-report
+.DS_Store

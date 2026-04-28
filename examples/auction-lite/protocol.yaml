@@ -1,0 +1,59 @@
+protocol: AuctionLite
+description: Minimal auction state machine for AikenFlow protocol compilation.
+
+assets:
+  - name: ada
+    kind: lovelace
+
+states:
+  Open:
+    datum:
+      seller: PubKeyHash
+      highestBidder: PubKeyHash
+      highestBid: Lovelace
+      deadline: POSIXTime
+  Closed:
+    datum:
+      seller: PubKeyHash
+      winner: PubKeyHash
+      finalBid: Lovelace
+
+transitions:
+  CreateAuction:
+    inputs: []
+    outputs:
+      - state: Open
+        value:
+          ada: "$minBid"
+    constraints:
+      - signed_by: "$seller"
+      - positive: "$minBid"
+
+  Bid:
+    inputs:
+      - state: Open
+    outputs:
+      - state: Open
+        value:
+          ada: "$bid"
+    constraints:
+      - signed_by: "$bidder"
+      - before: "datum.deadline"
+      - positive: "$bid"
+
+  Close:
+    inputs:
+      - state: Open
+    outputs:
+      - state: Closed
+        value:
+          ada: "datum.highestBid"
+    constraints:
+      - signed_by: "datum.seller"
+      - after: "datum.deadline"
+
+invariants:
+  - name: highest_bid_monotonic
+    expression: "transition.Bid increases datum.highestBid"
+  - name: close_requires_deadline
+    expression: "transition.Close requires after(datum.deadline)"

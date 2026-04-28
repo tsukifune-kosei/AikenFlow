@@ -1,0 +1,71 @@
+{
+  "formal_proof_status": "not_formally_proven",
+  "constraints": [
+    {
+      "transition": "Deposit",
+      "constraint": "signed_by($owner)",
+      "negative_case": "missing_signature",
+      "compiler_coverage": "off-chain signer parameter and test scaffold; no generated validator branch"
+    },
+    {
+      "transition": "Deposit",
+      "constraint": "positive($amount)",
+      "negative_case": "non_positive_value",
+      "compiler_coverage": "test scaffold and manual review only; no generated validator branch"
+    },
+    {
+      "transition": "Withdraw",
+      "constraint": "signed_by(datum.owner)",
+      "negative_case": "missing_signature",
+      "compiler_coverage": "generated validator check and test scaffold"
+    },
+    {
+      "transition": "Withdraw",
+      "constraint": "after(datum.deadline)",
+      "negative_case": "premature_validity_interval",
+      "compiler_coverage": "generated validator check and test scaffold"
+    },
+    {
+      "transition": "EmergencyCancel",
+      "constraint": "signed_by(datum.owner)",
+      "negative_case": "missing_signature",
+      "compiler_coverage": "generated validator check and test scaffold"
+    },
+    {
+      "transition": "EmergencyCancel",
+      "constraint": "before(datum.deadline)",
+      "negative_case": "expired_validity_interval",
+      "compiler_coverage": "generated validator check and test scaffold"
+    }
+  ],
+  "invariants": [
+    {
+      "invariant": "no_negative_locked_value",
+      "expression": "locked.amount >= 0",
+      "transitions_covered": [],
+      "generated_negative_cases": 0,
+      "test_coverage_status": "not_mapped",
+      "formal_status": "not_formally_proven"
+    },
+    {
+      "invariant": "withdrawal_requires_owner",
+      "expression": "transition.Withdraw requires signature(datum.owner)",
+      "transitions_covered": [
+        "Withdraw"
+      ],
+      "generated_negative_cases": 2,
+      "test_coverage_status": "partial",
+      "formal_status": "not_formally_proven"
+    },
+    {
+      "invariant": "withdrawal_requires_deadline_passed",
+      "expression": "transition.Withdraw requires after(datum.deadline)",
+      "transitions_covered": [
+        "Withdraw"
+      ],
+      "generated_negative_cases": 2,
+      "test_coverage_status": "partial",
+      "formal_status": "not_formally_proven"
+    }
+  ]
+}
