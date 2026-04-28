@@ -2,7 +2,7 @@
   "name": "vscode-aikenflow",
   "displayName": "AikenFlow",
   "description": "Protocol assurance cockpit for Aiken/Cardano builders.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "tsukifune-kosei",
   "license": "Apache-2.0",
   "icon": "images/icon.png",

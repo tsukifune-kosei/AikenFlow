@@ -14,8 +14,8 @@ members = [
 [workspace.package]
 edition = "2021"
 license = "Apache-2.0"
-repository = "https://github.com/aikenflow/aikenflow"
-homepage = "https://github.com/aikenflow/aikenflow"
+repository = "https://github.com/tsukifune-kosei/AikenFlow"
+homepage = "https://github.com/tsukifune-kosei/AikenFlow"
 authors = ["AikenFlow contributors"]
 
 [workspace.dependencies]

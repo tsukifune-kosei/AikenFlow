@@ -46,6 +46,6 @@ VSIX.
 
 ## Release
 
-The extension is packaged as `vscode-aikenflow-0.1.0.vsix`. Marketplace
+The extension is packaged as `vscode-aikenflow-<version>.vsix`. Marketplace
 publishing is handled by the repository release workflow when `VSCE_PAT` is
 configured for the `tsukifune-kosei` publisher.

@@ -97,7 +97,7 @@ Install the VSIX from a GitHub Release, or build it locally:
 cd extensions/vscode-aikenflow
 npm ci
 npm run vsix
-code --install-extension vscode-aikenflow-0.1.0.vsix
+code --install-extension vscode-aikenflow-0.1.1.vsix
 ```
 
 1. Install or build the `aikenflow` CLI.

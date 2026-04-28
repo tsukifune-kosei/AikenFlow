@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "aikenflow-agent-support"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "tempfile",
  "thiserror",
@@ -12,14 +12,14 @@ dependencies = [
 
 [[package]]
 name = "aikenflow-aiken-gen"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "aikenflow-ir",
 ]
 
 [[package]]
 name = "aikenflow-assurance"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "aikenflow-ir",
  "aikenflow-parser",
@@ -29,7 +29,7 @@ dependencies = [
 
 [[package]]
 name = "aikenflow-cli"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "aikenflow-agent-support",
  "aikenflow-aiken-gen",
@@ -47,7 +47,7 @@ dependencies = [
 
 [[package]]
 name = "aikenflow-export"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "aikenflow-aiken-gen",
  "aikenflow-assurance",
@@ -60,7 +60,7 @@ dependencies = [
 
 [[package]]
 name = "aikenflow-ir"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "serde",
  "serde_json",
@@ -69,14 +69,14 @@ dependencies = [
 
 [[package]]
 name = "aikenflow-lucid-gen"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "aikenflow-ir",
 ]
 
 [[package]]
 name = "aikenflow-parser"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "aikenflow-ir",
  "serde",

@@ -19,7 +19,7 @@ For the VS Code extension, run dependency and packaging checks from
 ```bash
 npm audit --audit-level=moderate
 npm run check:full
-unzip -l vscode-aikenflow-0.1.0.vsix
+unzip -l vscode-aikenflow-<version>.vsix
 ```
 
 The VSIX must contain compiled extension code, the built webview assets,
@@ -115,7 +115,7 @@ Tag releases as `vX.Y.Z`. `.github/workflows/release.yml` must produce:
 - native `aikenflow` CLI archives for Linux, macOS Intel, macOS Apple Silicon,
   and Windows;
 - SHA-256 checksum files for every archive;
-- `vscode-aikenflow-0.1.0.vsix` and checksum;
+- `vscode-aikenflow-<version>.vsix` and checksum;
 - a GitHub Release containing all artefacts.
 
 Marketplace publishing is optional and only runs when `VSCE_PAT` is configured
